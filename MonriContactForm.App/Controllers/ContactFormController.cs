@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MonriContactForm.Core.Interfaces.Repositories;
 using MonriContactForm.Core.Interfaces.Services;
 using MonriContactForm.Core.Models.Requests;
 
@@ -10,25 +9,16 @@ namespace MonriContactForm.App.Controllers;
 public class ContactFormController : Controller
 {
     private readonly IContactFormService _contactFormService;
-    private readonly IUsersRepository _usersRepository;
 
-    public ContactFormController(IContactFormService contactFormService, IUsersRepository usersRepository)
+    public ContactFormController(IContactFormService contactFormService)
     {
         _contactFormService = contactFormService;
-        _usersRepository = usersRepository;
     }
 
     [HttpPost]
     public async Task<IActionResult> ContactUser([FromBody] ContactUserRequest contactUserRequest)
     {
-        return Ok();
+        await _contactFormService.ContactUserAsync(contactUserRequest);
+        return NoContent();
     }
-
-    // should be deleted
-    [HttpGet]
-    public async Task<IActionResult> GetUserDetails([FromQuery] string email)
-    {
-        var user = await _usersRepository.GetUserByEmailAsync(email);
-        return Ok(user);
-    } 
 }

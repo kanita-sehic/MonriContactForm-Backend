@@ -1,3 +1,1 @@
-﻿SELECT *
-FROM Users
-WHERE Email = @Email
+﻿SELECT * FROM Users WHERE Email = @Email;

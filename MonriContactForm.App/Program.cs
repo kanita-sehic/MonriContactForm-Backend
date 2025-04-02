@@ -1,11 +1,13 @@
 using Microsoft.Data.SqlClient;
 using MonriContactForm.App.Extensions;
+using MonriContactForm.Core.Configuration;
 using MonriContactForm.Core.Interfaces;
 using MonriContactForm.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<AppSettings>(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -13,7 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.RegisterDatabaseConnectionFactory(builder.Configuration);
 builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
-builder.Services.RegisterHttpClients();
+builder.Services.RegisterHttpClients(builder.Configuration);
 
 var app = builder.Build();
 

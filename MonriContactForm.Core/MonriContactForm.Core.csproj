@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <Folder Include="Constants\" />
-    <Folder Include="Models\Responses\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="Models\Responses\" />
   </ItemGroup>
 
   <ItemGroup>

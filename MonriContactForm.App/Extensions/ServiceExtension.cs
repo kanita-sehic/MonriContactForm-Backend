@@ -27,9 +27,14 @@ public static class ServiceExtension
         services.AddTransient<IEmailService, EmailService>();
     }
 
-    public static void RegisterHttpClients(this IServiceCollection services)
+    public static void RegisterHttpClients(this IServiceCollection services, IConfiguration configuration)
     {
-        // add base address
-        services.AddHttpClient<IUsersClient, UsersClient>();
+        var usersApiUrl = configuration.GetValue<string>("UsersApiUrl");
+
+        services.AddHttpClient<IUsersClient, UsersClient>(client =>
+        {
+            client.BaseAddress = new Uri(usersApiUrl);
+            client.DefaultRequestHeaders.Add("Accept", "application/json");
+        });
     }
 }
