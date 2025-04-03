@@ -37,7 +37,7 @@ public class ContactFormService : IContactFormService
             await _usersRepository.UpdateUserAsync(user);
         }
 
-        // await _emailService.SendEmailAsync(user.Email, "Contact Form", "Contact Form");
+        await _emailService.SendEmailAsync(user.Email, "Contact Form", "This is an email sent from contact form.");
     }
 
     private string? GetFormattedAddress(Address? address)
