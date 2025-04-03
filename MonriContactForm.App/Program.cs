@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using Microsoft.Data.SqlClient;
 using MonriContactForm.App.Extensions;
 using MonriContactForm.Core.Configuration;
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.Configure<AppSettings>(builder.Configuration);
+builder.Services.ConfigureRateLimiting(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -39,6 +41,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseIpRateLimiting();
 
 app.UseAuthorization();
 

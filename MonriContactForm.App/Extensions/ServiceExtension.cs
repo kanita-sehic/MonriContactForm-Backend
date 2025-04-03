@@ -1,4 +1,5 @@
-﻿using MonriContactForm.Core.Interfaces;
+﻿using AspNetCoreRateLimit;
+using MonriContactForm.Core.Interfaces;
 using MonriContactForm.Core.Interfaces.HttpClients;
 using MonriContactForm.Core.Interfaces.Repositories;
 using MonriContactForm.Core.Interfaces.Services;
@@ -36,5 +37,13 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(usersApiUrl);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
+    }
+
+    public static void ConfigureRateLimiting(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddMemoryCache();
+        services.AddInMemoryRateLimiting();
+        services.Configure<IpRateLimitOptions>(configuration.GetSection("IpRateLimiting"));
+        services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
     }
 }
