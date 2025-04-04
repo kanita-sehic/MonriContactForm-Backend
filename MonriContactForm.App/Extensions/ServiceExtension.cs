@@ -6,6 +6,7 @@ using MonriContactForm.Core.Interfaces.Services;
 using MonriContactForm.Core.Services;
 using MonriContactForm.Infrastructure.Data;
 using MonriContactForm.Infrastructure.Data.Repositories;
+using MonriContactForm.Infrastructure.Email.Services;
 using MonriContactForm.Infrastructure.HttpClients;
 
 namespace MonriContactForm.App.Extensions;
@@ -26,6 +27,7 @@ public static class ServiceExtension
     {
         services.AddScoped<IContactFormService, ContactFormService>();
         services.AddTransient<IEmailService, EmailService>();
+        services.AddTransient<IEmailTemplateRenderer, EmailTemplateRenderer>();
     }
 
     public static void RegisterHttpClients(this IServiceCollection services, IConfiguration configuration)

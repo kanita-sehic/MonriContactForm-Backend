@@ -1,33 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Data\SqlScripts\Migrations\CreateDatabase.sql" />
-    <None Remove="Data\SqlScripts\Migrations\CreateTables.sql" />
-    <None Remove="Data\SqlScripts\Users\Create.sql" />
-    <None Remove="Data\SqlScripts\Users\GetByEmail.sql" />
-    <None Remove="Data\SqlScripts\Users\Update.sql" />
-  </ItemGroup>
+	<PropertyGroup>
+		<PreserveCompilationContext>true</PreserveCompilationContext>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Data\SqlScripts\Migrations\CreateDatabase.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Migrations\CreateTables.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Users\Create.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Users\GetByEmail.sql" />
-    <EmbeddedResource Include="Data\SqlScripts\Users\Update.sql" />
-  </ItemGroup>
+	<PropertyGroup>
+		<PreserveCompilationReferences>true</PreserveCompilationReferences>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MonriContactForm.Core\MonriContactForm.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Data\SqlScripts\Migrations\CreateDatabase.sql" />
+		<None Remove="Data\SqlScripts\Migrations\CreateTables.sql" />
+		<None Remove="Data\SqlScripts\Users\Create.sql" />
+		<None Remove="Data\SqlScripts\Users\GetByEmail.sql" />
+		<None Remove="Data\SqlScripts\Users\Update.sql" />
+		<None Remove="Email\Templates\UserInfo.cshtml" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="Data\SqlScripts\Migrations\CreateDatabase.sql" />
+		<EmbeddedResource Include="Data\SqlScripts\Migrations\CreateTables.sql" />
+		<EmbeddedResource Include="Data\SqlScripts\Users\Create.sql" />
+		<EmbeddedResource Include="Data\SqlScripts\Users\GetByEmail.sql" />
+		<EmbeddedResource Include="Data\SqlScripts\Users\Update.sql" />
+		<EmbeddedResource Include="Email\Templates\UserInfo.cshtml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\MonriContactForm.Core\MonriContactForm.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.1" />
+		<PackageReference Include="RazorLight" Version="2.3.1" />
+	</ItemGroup>
 
 </Project>

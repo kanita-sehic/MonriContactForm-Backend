@@ -4,7 +4,7 @@ using MonriContactForm.Core.Interfaces.Services;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace MonriContactForm.Core.Services;
+namespace MonriContactForm.Infrastructure.Email.Services;
 
 public class EmailService : IEmailService
 {
@@ -15,15 +15,14 @@ public class EmailService : IEmailService
         _configuration = options.Value.Email;
     }
 
-    public async Task SendEmailAsync(string toEmail, string subject, string content)
+    public async Task SendEmailAsync(string toEmail, string subject, string htmlContent, string? textContent = null)
     {
         try
         {
             var client = new SendGridClient(_configuration.ApiKey);
             var from = new EmailAddress(_configuration.FromEmail, _configuration.FromName);
             var to = new EmailAddress(toEmail);
-            var textContent = content;
-            var htmlContent = content;
+
             var message = MailHelper.CreateSingleEmail(from, to, subject, textContent, htmlContent);
 
             var response = await client.SendEmailAsync(message);

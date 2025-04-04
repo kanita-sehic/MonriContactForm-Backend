@@ -11,12 +11,14 @@ public class ContactFormService : IContactFormService
 {
     private readonly IUsersRepository _usersRepository;
     private readonly IEmailService _emailService;
+    private readonly IEmailTemplateRenderer _emailTemplateRenderer;
     private readonly IUsersClient _usersClient;
 
-    public ContactFormService(IUsersRepository usersRepository, IEmailService emailService, IUsersClient usersClient)
+    public ContactFormService(IUsersRepository usersRepository, IEmailService emailService, IEmailTemplateRenderer emailTemplateRenderer,  IUsersClient usersClient)
     {
         _usersRepository = usersRepository;
         _emailService = emailService;
+        _emailTemplateRenderer = emailTemplateRenderer;
         _usersClient = usersClient;
     }
 
@@ -37,7 +39,8 @@ public class ContactFormService : IContactFormService
             await _usersRepository.UpdateUserAsync(user);
         }
 
-        await _emailService.SendEmailAsync(user.Email, "Contact Form", "This is an email sent from contact form.");
+        var emailContent = await _emailTemplateRenderer.RenderTemplateAsync("UserInfo", user);
+        await _emailService.SendEmailAsync(user.Email, "Your User Information", emailContent);
     }
 
     private string? GetFormattedAddress(Address? address)
