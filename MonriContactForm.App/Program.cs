@@ -16,6 +16,7 @@ builder.Host.UseSerilog((context, services, configuration) => {
 // Add services to the container.
 builder.Services.Configure<AppSettings>(builder.Configuration);
 builder.Services.ConfigureRateLimiting(builder.Configuration);
+builder.Services.ConfigureCors();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -25,6 +26,7 @@ builder.Services.RegisterRepositories();
 builder.Services.RegisterServices();
 builder.Services.RegisterHttpClients(builder.Configuration);
 
+// Configure the HTTP request pipeline.
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -42,9 +44,9 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseCors("AllowAll");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
