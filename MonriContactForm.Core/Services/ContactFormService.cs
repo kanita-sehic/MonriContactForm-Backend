@@ -1,4 +1,5 @@
-﻿using MonriContactForm.Core.Entities;
+﻿using Microsoft.Extensions.Logging;
+using MonriContactForm.Core.Entities;
 using MonriContactForm.Core.Interfaces.HttpClients;
 using MonriContactForm.Core.Interfaces.Repositories;
 using MonriContactForm.Core.Interfaces.Services;
@@ -13,17 +14,26 @@ public class ContactFormService : IContactFormService
     private readonly IEmailService _emailService;
     private readonly IEmailTemplateRenderer _emailTemplateRenderer;
     private readonly IUsersClient _usersClient;
+    private readonly ILogger<ContactFormService> _logger;
 
-    public ContactFormService(IUsersRepository usersRepository, IEmailService emailService, IEmailTemplateRenderer emailTemplateRenderer,  IUsersClient usersClient)
+    public ContactFormService(
+        IUsersRepository usersRepository,
+        IEmailService emailService,
+        IEmailTemplateRenderer emailTemplateRenderer,
+        IUsersClient usersClient,
+        ILogger<ContactFormService> logger)
     {
         _usersRepository = usersRepository;
         _emailService = emailService;
         _emailTemplateRenderer = emailTemplateRenderer;
         _usersClient = usersClient;
+        _logger = logger;
     }
 
     public async Task ContactUserAsync(ContactUserRequest contactUserRequest)
     {
+        _logger.LogInformation($"Processing contact user request: {contactUserRequest}");
+
         var existingUser = await _usersRepository.GetUserByEmailAsync(contactUserRequest.Email);
         var userDetails = await _usersClient.GetUserByEmailAsync(contactUserRequest.Email);
 
@@ -40,7 +50,7 @@ public class ContactFormService : IContactFormService
         }
 
         var emailContent = await _emailTemplateRenderer.RenderTemplateAsync("UserInfo", user);
-        await _emailService.SendEmailAsync(user.Email, "Your User Information", emailContent);
+        await _emailService.SendEmailAsync(user.Email, "User Information", emailContent);
     }
 
     private string? GetFormattedAddress(Address? address)

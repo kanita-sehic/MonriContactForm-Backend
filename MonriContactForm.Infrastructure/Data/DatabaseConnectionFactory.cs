@@ -1,5 +1,4 @@
-﻿using System.Data;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using MonriContactForm.Core.Interfaces;
 
 namespace MonriContactForm.Infrastructure.Data;

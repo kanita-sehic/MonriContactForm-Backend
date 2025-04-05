@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using MonriContactForm.Core.Entities;
 using MonriContactForm.Core.Interfaces;
 using MonriContactForm.Core.Interfaces.Repositories;
@@ -8,35 +9,44 @@ namespace MonriContactForm.Infrastructure.Data.Repositories;
 public class UsersRepository : IUsersRepository
 {
     private readonly IDatabaseConnectionFactory _connectionFactory;
+    private readonly ILogger<UsersRepository> _logger;
 
-    public UsersRepository(IDatabaseConnectionFactory connectionFactory)
+    public UsersRepository(IDatabaseConnectionFactory connectionFactory, ILogger<UsersRepository> logger)
     {
         _connectionFactory = connectionFactory;
+        _logger = logger;
     }
 
     public async Task<User> CreateUserAsync(User user)
     {
-        await using var connection = await _connectionFactory.CreateConnectionAsync();
-        var sqlScript = SqlScriptLoader.LoadScript("Users", "Create");
-
-        await using var command = new SqlCommand(sqlScript, connection);
-        AddUserQueryParameters(command, user);
-
-        await using var reader = await command.ExecuteReaderAsync();
-
-        if (!await reader.ReadAsync())
+        try
         {
-            // improve
-            throw new Exception("User not created");
-        }
+            _logger.LogInformation($"Creating user with the following data: {user}.");
 
-        return MapUserFromReader(reader);
+            await using var connection = await _connectionFactory.CreateConnectionAsync();
+            var sqlScript = SqlScriptLoader.LoadScript("Users", "Create");
+
+            await using var command = new SqlCommand(sqlScript, connection);
+            AddUserQueryParameters(command, user);
+
+            await using var reader = await command.ExecuteReaderAsync();
+            await reader.ReadAsync();
+
+            return MapUserFromReader(reader);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error while creating user: {user}.");
+            throw;
+        }
     }
 
     public async Task<User> UpdateUserAsync(User user)
     {
         try
         {
+            _logger.LogInformation($"Updating user with email {user.Email} with the following data: {user}.");
+
             await using var connection = await _connectionFactory.CreateConnectionAsync();
             var sqlScript = SqlScriptLoader.LoadScript("Users", "Update");
 
@@ -45,38 +55,44 @@ public class UsersRepository : IUsersRepository
             AddUserQueryParameters(command, user);
 
             await using var reader = await command.ExecuteReaderAsync();
+            await reader.ReadAsync();
+
+            return MapUserFromReader(reader);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error while updating user: {user}.");
+            throw;
+        }
+    }
+
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        try
+        {
+            _logger.LogInformation($"Fetching user with email: {email}.");
+
+            await using var connection = await _connectionFactory.CreateConnectionAsync();
+            var sqlScript = SqlScriptLoader.LoadScript("Users", "GetByEmail");
+
+            await using var command = new SqlCommand(sqlScript, connection);
+            command.Parameters.AddWithValue("@Email", email);
+
+            await using var reader = await command.ExecuteReaderAsync();
 
             if (!await reader.ReadAsync())
             {
-                // improve
-                throw new Exception("User not updated");
+                _logger.LogInformation($"There is no existing user with email: {email}.");
+                return default;
             }
 
             return MapUserFromReader(reader);
         }
         catch (Exception e)
         {
-
+            _logger.LogError(e, $"Error while fetching user with email: {email}.");
             throw;
         }
-    }
-
-    public async Task<User?> GetUserByEmailAsync(string email)
-    {
-        await using var connection = await _connectionFactory.CreateConnectionAsync();
-        var sqlScript = SqlScriptLoader.LoadScript("Users", "GetByEmail");
-
-        await using var command = new SqlCommand(sqlScript, connection);
-        command.Parameters.AddWithValue("@Email", email);
-
-        await using var reader = await command.ExecuteReaderAsync();
-
-        if (!await reader.ReadAsync())
-        {
-            return default;
-        }
-
-        return MapUserFromReader(reader);
     }
 
     private User MapUserFromReader(SqlDataReader reader)

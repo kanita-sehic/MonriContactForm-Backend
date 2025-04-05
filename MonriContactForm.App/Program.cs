@@ -2,10 +2,16 @@ using AspNetCoreRateLimit;
 using Microsoft.Data.SqlClient;
 using MonriContactForm.App.Extensions;
 using MonriContactForm.Core.Configuration;
+using MonriContactForm.Core.Exceptions;
 using MonriContactForm.Core.Interfaces;
 using MonriContactForm.Infrastructure.Data;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, services, configuration) => {
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
 
 // Add services to the container.
 builder.Services.Configure<AppSettings>(builder.Configuration);
@@ -21,6 +27,8 @@ builder.Services.RegisterHttpClients(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 using (var scope = app.Services.CreateScope())
 {
     try
@@ -29,7 +37,8 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception e)
     {
-        // log the exception
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(e, "An error occurred while initializing the database.");
     }
 }
 
@@ -39,6 +48,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 

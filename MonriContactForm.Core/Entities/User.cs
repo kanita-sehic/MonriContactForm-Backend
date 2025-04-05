@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace MonriContactForm.Core.Entities;
 
@@ -29,4 +30,9 @@ public class User
 
     [MaxLength(450)]
     public string? Address { get; set; }
+
+    public override string ToString()
+    {
+        return JsonSerializer.Serialize(this);
+    }
 }

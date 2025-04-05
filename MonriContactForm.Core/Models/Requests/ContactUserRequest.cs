@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace MonriContactForm.Core.Models.Requests;
 
@@ -13,4 +14,9 @@ public sealed class ContactUserRequest
     [EmailAddress]
     [StringLength(250)]
     public string Email { get; set; }
+
+    public override string ToString()
+    {
+        return JsonSerializer.Serialize(this);
+    }
 }
