@@ -32,6 +32,6 @@ public class ContactFormController : Controller
 
         await _contactFormService.ContactUserAsync(contactUserRequest);
 
-        return Ok("User is successfully contacted.");
+        return Ok();
     }
 }
