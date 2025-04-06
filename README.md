@@ -45,7 +45,7 @@ This solution is organized into four main projects:
 
 ## ▶️ Running the Application
 
-To run the API locally:
+To run the API locally (the database and Users table will be created automatically if it does not exist):
 
 ```bash
 dotnet run
