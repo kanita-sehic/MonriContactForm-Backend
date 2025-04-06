@@ -50,4 +50,3 @@ To run the API locally (the database and Users table will be created automatical
 ```bash
 dotnet run
 ```
-![Contact Form API]([https://example.com/path/to/your/image.png](https://drive.google.com/file/d/11g7Z1mB0lTsjMPJpMVCYgNQW2AtU72Cg/view?usp=drive_link))
