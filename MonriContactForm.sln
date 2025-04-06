@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonriContactForm.Core", "Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonriContactForm.Infrastructure", "MonriContactForm.Infrastructure\MonriContactForm.Infrastructure.csproj", "{9770BEB1-0CA2-4282-8343-EE7B18DFA960}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonriContactForm.Tests", "MonriContactForm.Tests\MonriContactForm.Tests.csproj", "{0553AAB3-E883-4F35-883A-65882DC0482B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{9770BEB1-0CA2-4282-8343-EE7B18DFA960}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9770BEB1-0CA2-4282-8343-EE7B18DFA960}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9770BEB1-0CA2-4282-8343-EE7B18DFA960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0553AAB3-E883-4F35-883A-65882DC0482B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0553AAB3-E883-4F35-883A-65882DC0482B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0553AAB3-E883-4F35-883A-65882DC0482B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0553AAB3-E883-4F35-883A-65882DC0482B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

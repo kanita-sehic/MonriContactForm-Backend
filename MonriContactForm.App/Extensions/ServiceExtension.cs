@@ -8,6 +8,7 @@ using MonriContactForm.Infrastructure.Data;
 using MonriContactForm.Infrastructure.Data.Repositories;
 using MonriContactForm.Infrastructure.Email.Services;
 using MonriContactForm.Infrastructure.HttpClients;
+using SendGrid;
 
 namespace MonriContactForm.App.Extensions;
 
@@ -39,6 +40,8 @@ public static class ServiceExtension
             client.BaseAddress = new Uri(usersApiUrl);
             client.DefaultRequestHeaders.Add("Accept", "application/json");
         });
+
+        services.AddTransient<ISendGridClient>(_ => new SendGridClient(configuration.GetValue<string>("Email:ApiKey")));
     }
 
     public static void ConfigureRateLimiting(this IServiceCollection services, IConfiguration configuration)

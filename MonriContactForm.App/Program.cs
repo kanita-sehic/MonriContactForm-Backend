@@ -83,3 +83,5 @@ async Task InitializeDatabase(IServiceProvider services)
     await using var connection = await connectionFactory.CreateConnectionAsync();
     await new SqlCommand(createTablesScript, connection).ExecuteNonQueryAsync();
 }
+
+public partial class Program { }

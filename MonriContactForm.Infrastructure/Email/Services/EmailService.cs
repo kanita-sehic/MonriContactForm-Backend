@@ -11,11 +11,13 @@ namespace MonriContactForm.Infrastructure.Email.Services;
 
 public class EmailService : IEmailService
 {
+    private readonly ISendGridClient _sendGridClient;
     private readonly EmailConfiguration _configuration;
     private readonly ILogger<EmailService> _logger;
 
-    public EmailService(IOptions<AppSettings> options, ILogger<EmailService> logger)
+    public EmailService(IOptions<AppSettings> options, ILogger<EmailService> logger, ISendGridClient sendGridClient)
     {
+        _sendGridClient = sendGridClient;
         _configuration = options.Value.Email;
         _logger = logger;
     }
@@ -26,13 +28,12 @@ public class EmailService : IEmailService
         {
             _logger.LogInformation($"Sending email to {toEmail}.");
 
-            var client = new SendGridClient(_configuration.ApiKey);
             var from = new EmailAddress(_configuration.FromEmail, _configuration.FromName);
             var to = new EmailAddress(toEmail);
 
             var message = MailHelper.CreateSingleEmail(from, to, subject, textContent, htmlContent);
 
-            var response = await client.SendEmailAsync(message);
+            var response = await _sendGridClient.SendEmailAsync(message);
 
             if (response.StatusCode is not HttpStatusCode.Accepted or HttpStatusCode.OK)
             {
